@@ -19,6 +19,8 @@ function limit-completion () {
    then
       compstate[list]=''
       zle -M "Too many matches."
+   elif [[ "$list_lines" == 0 ]]; then
+      compstate[list]=''
    fi
 }
 
