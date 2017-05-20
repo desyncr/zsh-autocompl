@@ -24,7 +24,7 @@ function limit-completion () {
 
 function zle-autosuggestion () {
   zle self-insert
-  [[ $#BUFFER < 3 ]] && { return }
+  [[ $#BUFFER < ${INCR_MIN_LENGTH:-2} ]] && { return }
 
   [[ $BUFFER = l* ]] && zle complete-files
   [[ $USE_CAPTURE == true && "$BUFFER" = - ]] && zle complete-args
