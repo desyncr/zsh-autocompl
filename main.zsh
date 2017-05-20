@@ -4,9 +4,10 @@
 function complete-files-func () { compadd -- $(command ls .) }
 zle -C complete-files complete-word complete-files-func
 
+path+=(${0:A:h}/zsh-capture-completion/)
 if (( $+commands[capture.zsh] )); then
   USE_CAPTURE=true
-  function complete-args-func () { compadd -- $(capture.zsh $BUFFER) }
+  function complete-args-func () { compadd -- ${$(capture.zsh "$BUFFER")//$'\r'} }
   zle -C complete-args complete-word complete-args-func
 fi
 
@@ -26,7 +27,7 @@ function zle-autosuggestion () {
   [[ $#BUFFER < 3 ]] && { return }
 
   [[ $BUFFER = l* ]] && zle complete-files
-  [[ $USE_CAPTURE == true && $BUFFER =~ ".* -" ]] && zle complete-args
+  [[ $USE_CAPTURE == true && "$BUFFER" = - ]] && zle complete-args
   comppostfuncs=(limit-completion)
 
   zle list-choices
