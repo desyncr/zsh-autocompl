@@ -26,10 +26,10 @@ function limit-completion () {
 
 function zle-autosuggestion () {
   zle self-insert
-  [[ $#BUFFER < ${INCR_MIN_LENGTH:-2} ]] && { return }
+  [[ $#BUFFER < ${INCR_MIN_LENGTH:-2} ]] && { zle -M ''; return }
 
   [[ $BUFFER = l* ]] && zle complete-files
-  [[ $USE_CAPTURE == true && "$BUFFER" = - ]] && zle complete-args
+  [[ $USE_CAPTURE == true && "$BUFFER" =~ -$ ]] && zle complete-args
   comppostfuncs=(limit-completion)
 
   zle list-choices
