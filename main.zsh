@@ -1,6 +1,9 @@
 # vim: sw=2 ts=2 et!
 #zmodload zsh/zle
 # expand-or-complete-or-list-files
+INCR_MIN_LENGTH=${INCR_MIN_LENGTH:-2}
+INCR_MAX_LENGTH=${INCR_MAX_LENGTH:-5}
+
 function complete-files-func () { compadd -- $(command ls .) }
 zle -C complete-files complete-word complete-files-func
 
@@ -26,7 +29,7 @@ function limit-completion () {
 
 function zle-autosuggestion () {
   zle self-insert
-  [[ $#BUFFER < ${INCR_MIN_LENGTH:-2} || $#BUFFER > ${INCR_MAX_LENGTH:-5} || $BUFFER =~ "'" || $BUFFER =~ '"' ]] && { zle -M ''; return }
+  [[ $#BUFFER -lt $INCR_MIN_LENGTH || $#BUFFER -gt $INCR_MAX_LENGTH || $BUFFER =~ "'" || $BUFFER =~ '"' ]] && { zle -M ''; return }
 
   [[ $BUFFER = l* ]] && zle complete-files
   [[ $USE_CAPTURE == true && "$BUFFER" =~ -$ ]] && zle complete-args
