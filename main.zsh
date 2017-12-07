@@ -3,7 +3,7 @@
 # expand-or-complete-or-list-files
 INCR_MIN_LENGTH=${INCR_MIN_LENGTH:-2}
 INCR_MAX_LENGTH=${INCR_MAX_LENGTH:-10}
-INCR_MAX_MATCHES=${INCR_MAX_MATCHES:-100}
+INCR_MAX_MATCHES=${INCR_MAX_MATCHES:-30}
 
 function complete-files-func () { compadd -- $(command ls .) }
 zle -C complete-files complete-word complete-files-func
@@ -18,7 +18,8 @@ fi
 function limit-completion () {
    local list_lines
    list_lines=$compstate[list_lines]
-   if [[ "$list_lines" -gt $INCR_MAX_MATCHES ]]
+   if [[ "$list_lines" -gt $INCR_MAX_MATCHES \
+        || $(expr $list_lines + $BUFFERLINES + 2) -gt "$LINES" ]]
    then
       compstate[list]=''
       zle -M "Too many matches."
